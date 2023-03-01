@@ -1,10 +1,10 @@
 package org.example.qa.restfulbooker;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.typesafe.config.ConfigFactory;
 import org.example.qa.cleanup.Booking;
 import org.example.qa.cleanup.CleanUp;
-import org.example.qa.healthcheck.BookerHealthCheck;
+import org.example.qa.healthcheck.HealthCheck;
+import org.example.qa.healthcheck.HealthCheckTypes;
 import org.example.qa.resfulbooker.RestfulBookerService;
 import org.example.qa.resfulbooker.model.BookingDto;
 import org.example.qa.resfulbooker.model.BookingInfoDto;
@@ -18,13 +18,13 @@ import java.util.List;
 
 public abstract class TestBaseRestfulBooker {
     protected final static Logger log = LoggerFactory.getLogger("TestBaseRestfulBooker");
-    protected static RestfulBookerService restfulBookerService = new RestfulBookerService(ConfigFactory.load());
+    protected static RestfulBookerService restfulBookerService = new RestfulBookerService();
     protected static List<BookingDto> predefinedBookings = new ArrayList<BookingDto>();
     public ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeAll
     static void testsSetupBeforeAll() {
-        BookerHealthCheck.ping();
+        HealthCheck.check(HealthCheckTypes.RestfulBooker);
         log.info("Creating predefined bookings for tests...");
         predefinedBookings.add(
                 restfulBookerService.getAllBookingIds().stream().findFirst()

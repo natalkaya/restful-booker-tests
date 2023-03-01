@@ -1,6 +1,5 @@
 package org.example.qa.resfulbooker;
 
-import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
@@ -27,10 +26,6 @@ public class RestfulBookerService {
     private final RequestSpecification baseUrlReqSpec;
     public final RestfulBookerConfig restfulBookerConfig;
 
-    public RestfulBookerService(Config config) {
-        this.restfulBookerConfig = new RestfulBookerConfig(config);
-        this.baseUrlReqSpec = new RequestSpecBuilder().setBaseUri(restfulBookerConfig.getBaseUrl()).build();
-    }
     public RestfulBookerService() {
         this.restfulBookerConfig = new RestfulBookerConfig(ConfigFactory.load());
         this.baseUrlReqSpec = new RequestSpecBuilder().setBaseUri(restfulBookerConfig.getBaseUrl()).build();
