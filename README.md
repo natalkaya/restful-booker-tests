@@ -3,10 +3,12 @@
 API tests for [Hotel booking endpoints](https://restful-booker.herokuapp.com/apidoc/index.html#api-Booking-GetBookings)
 have been added for the following endpoints:
 - CreateBooking
-- DeleteBooking (not working in auto tests, need debugging)
+- DeleteBooking
 - GetBookingById
 - GetBookings
 - PartialUpdateBooking (TBD)
+
+Tests check JSON content-type. XML and query params can be added in the future 
 
 Healthcheck is being executed before running the tests  
 
