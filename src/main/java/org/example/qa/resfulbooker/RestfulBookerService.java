@@ -5,6 +5,7 @@ import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
+import io.restassured.http.Header;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseOptions;
@@ -18,6 +19,7 @@ import org.example.qa.resfulbooker.model.RequestAuth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +31,16 @@ public class RestfulBookerService {
     public RestfulBookerService() {
         this.restfulBookerConfig = new RestfulBookerConfig(ConfigFactory.load());
         this.baseUrlReqSpec = new RequestSpecBuilder().setBaseUri(restfulBookerConfig.getBaseUrl()).build();
+    }
+
+    private Header basicAuthHeader(String userName, String password) {
+        String encodedCreds = Base64.getEncoder().encodeToString(
+                "%s:%s".formatted(userName, password).getBytes());
+        return new Header("Authorization", "Basic %s".formatted(encodedCreds));
+    }
+
+    private Header basicAuthHeader() {
+        return basicAuthHeader(restfulBookerConfig.getUserName(), restfulBookerConfig.getPassword());
     }
 
     public String accessToken() {
@@ -55,7 +67,7 @@ public class RestfulBookerService {
     public Response create(BookingInfoDto bookingInfo) {
         return given().basePath("booking")
                 .log().all()
-                .auth().basic(restfulBookerConfig.getUserName(), restfulBookerConfig.getPassword())
+                .header(basicAuthHeader())
                 .contentType(ContentType.JSON)
                 .body(bookingInfo)
                 .post();
@@ -64,8 +76,7 @@ public class RestfulBookerService {
     public Response delete(Long bookingId) {
         return given().basePath("booking")
                 .log().all()
-                .contentType(ContentType.JSON)
-                .auth().basic(restfulBookerConfig.getUserName(), restfulBookerConfig.getPassword())
+                .header(basicAuthHeader())
                 .delete(bookingId.toString()).andReturn();
     }
 

@@ -25,13 +25,13 @@ public abstract class TestBaseRestfulBooker {
     @BeforeAll
     static void testsSetupBeforeAll() {
         HealthCheck.check(HealthCheckTypes.RestfulBooker);
-        log.info("Creating predefined bookings for tests...");
         predefinedBookings.add(
                 restfulBookerService.getAllBookingIds().stream().findFirst()
                         .map(b -> BookingDto.builder().bookingId(b.getBookingId())
                                 .booking(restfulBookerService.getBookingOrThrow(b.getBookingId()))
                                 .build())
                         .orElseGet(() -> {
+                            log.info("Creating predefined bookings for tests...");
                             BookingDto bookingDto = restfulBookerService.createOrThrow(new BookingInfoDto());
                             CleanUp.add(new Booking(bookingDto.getBookingId()));
                             return bookingDto;
